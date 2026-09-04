@@ -129,6 +129,9 @@
           <div slot="header">
             <span>Redis 监控</span>
           </div>
+          <div class="mb8">
+            <el-tag size="mini" :type="wsConnected ? 'success' : 'warning'">WS {{ wsConnected ? 'CONNECTED' : 'DISCONNECTED' }}</el-tag>
+          </div>
           <el-descriptions :column="1" size="small" border>
             <el-descriptions-item label="运行模式">{{ redisHealth.mode || '-' }}</el-descriptions-item>
             <el-descriptions-item label="连接状态">
@@ -185,6 +188,7 @@
 import { listClient } from '@/api/rco/client'
 import { listCommandAudit, listTaskPresets, sendServerTask, sendTaskPreset } from '@/api/rco/control'
 import { getRedisHealth, getRedisQueueStats } from '@/api/rco/redis'
+import { createRcoWsClient } from '@/utils/rcoWs'
 
 export default {
   name: 'RcoDevice',
@@ -224,6 +228,9 @@ export default {
         apkUrl: '',
         msg: '',
       },
+      wsConnected: false,
+      wsClient: null,
+      lastRcoStatusAt: 0,
     }
   },
   computed: {
@@ -245,6 +252,13 @@ export default {
     this.getPresetList()
     this.getAuditList()
     this.getRedisMonitor()
+    this.initRcoWs()
+  },
+  beforeDestroy() {
+    if (this.wsClient) {
+      this.wsClient.disconnect()
+      this.wsClient = null
+    }
   },
   methods: {
     statusTag(status) {
@@ -295,6 +309,40 @@ export default {
       this.redisStats = {
         streamLength: typeof stats.streamLength === 'number' ? stats.streamLength : '-',
         listLength: typeof stats.listLength === 'number' ? stats.listLength : '-',
+      }
+    },
+    initRcoWs() {
+      if (this.wsClient) return
+      this.wsClient = createRcoWsClient({
+        onOpen: () => {
+          this.wsConnected = true
+        },
+        onClose: () => {
+          this.wsConnected = false
+        },
+        onError: () => {
+          this.wsConnected = false
+        },
+        onMessage: (payload) => {
+          this.handleWsMessage(payload)
+        },
+      })
+      this.wsClient.connect()
+    },
+    handleWsMessage(payload) {
+      if (!payload || !payload.type) return
+      if (payload.type === 'rco-status') {
+        this.onRcoStatus(payload.data || {})
+      }
+    },
+    onRcoStatus(data) {
+      const nowTs = Date.now()
+      if (nowTs - this.lastRcoStatusAt < 1000) return
+      this.lastRcoStatusAt = nowTs
+      this.getAuditList()
+      this.getRedisMonitor()
+      if (data && data.status) {
+        this.$message.info(`命令状态更新: ${data.status}`)
       }
     },
     onPresetChange() {
@@ -348,5 +396,9 @@ export default {
 
 .mt8 {
   margin-top: 8px;
+}
+
+.mb8 {
+  margin-bottom: 8px;
 }
 </style>

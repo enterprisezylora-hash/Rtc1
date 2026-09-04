@@ -47,6 +47,8 @@ src/
 	router/
 		modules/
 			rco.js
+	utils/
+		rcoWs.js
 ```
 
 ## 2b) Tempel file View (RuoYi asli style)
@@ -58,6 +60,7 @@ Salin folder ini ke project RuoYi frontend target (`ruoyi-ui/src/views/rco/`):
 - `src/views/rco/schedule/index.vue`
 
 Semua halaman sudah pakai pola komponen RuoYi + Element + `v-hasPermi`.
+Halaman device juga sudah terhubung websocket `/ws` (auto reconnect) untuk update realtime status command.
 
 ## 2c) Route component mapping
 
