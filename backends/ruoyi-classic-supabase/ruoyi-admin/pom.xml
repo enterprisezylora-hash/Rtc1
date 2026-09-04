@@ -15,6 +15,12 @@
         web服务入口
     </description>
 
+    <properties>
+        <frontend.project.dir>${project.basedir}/../../..</frontend.project.dir>
+        <frontend.dist.dir>${frontend.project.dir}/dist</frontend.dist.dir>
+        <skipFrontendBuild>false</skipFrontendBuild>
+    </properties>
+
     <dependencies>
 
         <!-- SpringBoot集成thymeleaf模板 -->
@@ -80,6 +86,68 @@
                     <warName>${project.artifactId}</warName>
                 </configuration>   
             </plugin>   
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>3.5.0</version>
+                <executions>
+                    <execution>
+                        <id>npm-ci</id>
+                        <phase>generate-resources</phase>
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                        <configuration>
+                            <skip>${skipFrontendBuild}</skip>
+                            <workingDirectory>${frontend.project.dir}</workingDirectory>
+                            <executable>npm</executable>
+                            <arguments>
+                                <argument>ci</argument>
+                            </arguments>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>npm-build</id>
+                        <phase>generate-resources</phase>
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                        <configuration>
+                            <skip>${skipFrontendBuild}</skip>
+                            <workingDirectory>${frontend.project.dir}</workingDirectory>
+                            <executable>npm</executable>
+                            <arguments>
+                                <argument>run</argument>
+                                <argument>build</argument>
+                            </arguments>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-resources-plugin</artifactId>
+                <version>3.3.1</version>
+                <executions>
+                    <execution>
+                        <id>copy-frontend-dist</id>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+                        <configuration>
+                            <skip>${skipFrontendBuild}</skip>
+                            <outputDirectory>${project.basedir}/src/main/resources/static/rco-ui</outputDirectory>
+                            <resources>
+                                <resource>
+                                    <directory>${frontend.dist.dir}</directory>
+                                    <filtering>false</filtering>
+                                </resource>
+                            </resources>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
             <!-- YUI Compressor (CSS/JS压缩) 
             <plugin>
                 <groupId>net.alchim31.maven</groupId>
