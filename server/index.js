@@ -587,6 +587,32 @@ function buildRuoyiRouters() {
             permissions: ['rco:schedule:list'],
           },
         },
+        {
+          name: 'RcoAudit',
+          path: 'audit',
+          hidden: false,
+          component: 'rco/audit/index',
+          meta: {
+            title: '命令审计',
+            icon: 'log',
+            noCache: false,
+            link: null,
+            permissions: ['rco:audit:list'],
+          },
+        },
+        {
+          name: 'RcoRedis',
+          path: 'redis',
+          hidden: false,
+          component: 'rco/redis/index',
+          meta: {
+            title: 'Redis 监控',
+            icon: 'redis',
+            noCache: false,
+            link: null,
+            permissions: ['rco:redis:monitor'],
+          },
+        },
       ],
     },
   ]

@@ -41,6 +41,26 @@ const rcoRouter = {
         permissions: ['rco:schedule:list'],
       },
     },
+    {
+      path: 'audit',
+      component: () => import('@/views/rco/audit/index'),
+      name: 'RcoAudit',
+      meta: {
+        title: '命令审计',
+        noCache: false,
+        permissions: ['rco:audit:list'],
+      },
+    },
+    {
+      path: 'redis',
+      component: () => import('@/views/rco/redis/index'),
+      name: 'RcoRedis',
+      meta: {
+        title: 'Redis 监控',
+        noCache: false,
+        permissions: ['rco:redis:monitor'],
+      },
+    },
   ],
 }
 
