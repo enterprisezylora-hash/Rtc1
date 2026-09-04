@@ -17,6 +17,9 @@ dist-ssr
 supabase/.temp/
 server/data/*.sqlite
 
+# Maven build output (bundled frontend assets)
+backends/*/ruoyi-admin/src/main/resources/static/
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
