@@ -1,0 +1,16 @@
+[Unit]
+Description=Screen Media Control Server
+After=network.target
+
+[Service]
+Type=simple
+User=www-data
+WorkingDirectory=/var/www/screen-media-control
+ExecStart=/usr/bin/node server/index.js
+Restart=always
+RestartSec=5
+Environment=NODE_ENV=production
+EnvironmentFile=/var/www/screen-media-control/.env.server
+
+[Install]
+WantedBy=multi-user.target

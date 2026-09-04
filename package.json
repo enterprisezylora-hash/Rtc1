@@ -1,0 +1,35 @@
+{
+  "name": "screen-media-control",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "concurrently \"npm:dev:front\" \"npm:dev:server\"",
+    "dev:front": "vite --host 0.0.0.0",
+    "dev:server": "node --env-file=.env.server server/index.js",
+    "dev:rco-device": "node --env-file=.env.server server/rco-device-subscriber.js",
+    "build": "vite build",
+    "preview": "vite preview",
+    "start": "node --env-file=.env.server server/index.js",
+    "rco:subscriber": "node --env-file=.env.server server/rco-device-subscriber.js"
+  },
+  "dependencies": {
+    "@aws-sdk/client-s3": "^3.1126.0",
+    "@supabase/supabase-js": "^2.115.0",
+    "axios": "^1.20.0",
+    "bcryptjs": "^3.0.3",
+    "cors": "^2.8.6",
+    "express": "^5.2.1",
+    "jsonwebtoken": "^9.0.3",
+    "multer": "^2.3.0",
+    "redis": "^6.2.1",
+    "uuid": "^14.0.2",
+    "vue": "^3.5.41",
+    "ws": "^8.21.3"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^6.0.8",
+    "concurrently": "^10.0.5",
+    "vite": "^8.2.2"
+  }
+}
