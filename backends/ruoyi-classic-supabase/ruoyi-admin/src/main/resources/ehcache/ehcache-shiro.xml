@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config xmlns="http://www.ehcache.org/v3"
+        xmlns:jsr107="http://www.ehcache.org/v3/jsr107">
+
+    <!-- 默认配置 -->
+    <service>
+        <jsr107:defaults enable-management="false" enable-statistics="false">
+            <jsr107:cache name="sys-cache" template="defaultCache"/>
+            <jsr107:cache name="sys-config" template="defaultCache"/>
+            <jsr107:cache name="sys-dict" template="defaultCache"/>
+            <jsr107:cache name="sys-authCache" template="authCache"/>
+            <jsr107:cache name="sys-userCache" template="userCache"/>
+            <jsr107:cache name="loginRecordCache" template="loginRecordTemplate"/>
+            <jsr107:cache name="shiro-activeSessionCache" template="sessionCache"/>
+        </jsr107:defaults>
+    </service>
+
+    <!-- 默认缓存模板：永久有效 -->
+    <cache-template name="defaultCache">
+        <heap unit="entries">1000</heap>
+    </cache-template>
+
+    <!-- 用户授权缓存模板：无过期 -->
+    <cache-template name="authCache">
+        <heap unit="entries">10000</heap>
+    </cache-template>
+
+    <!-- 系统活跃用户缓存模板 -->
+    <cache-template name="userCache">
+        <heap unit="entries">10000</heap>
+    </cache-template>
+
+    <!-- 登录记录缓存模板：锁定10分钟 -->
+    <cache-template name="loginRecordTemplate">
+        <expiry>
+            <tti unit="minutes">10</tti>
+        </expiry>
+        <heap unit="entries">2000</heap>
+    </cache-template>
+
+    <!-- 系统会话缓存模板 -->
+    <cache-template name="sessionCache">
+        <heap unit="entries">10000</heap>
+    </cache-template>
+
+</config>
