@@ -21,9 +21,9 @@ npm install
 npm run dev
 ```
 
-Frontend: http://localhost:5173
-Backend API: http://localhost:8787
-WebSocket: ws://localhost:8787/ws
+Frontend: https://panel.example.com
+Backend API: https://api.example.com
+WebSocket: wss://api.example.com/ws
 
 ## Login Admin
 

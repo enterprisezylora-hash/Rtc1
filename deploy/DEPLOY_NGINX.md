@@ -56,7 +56,7 @@ sudo systemctl reload nginx
 ## 7) Cek endpoint
 
 ```bash
-curl http://127.0.0.1/api/health
+curl https://api.example.com/api/health
 ```
 
 ## 8) HTTPS (opsional, direkomendasikan)

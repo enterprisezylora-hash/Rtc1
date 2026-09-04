@@ -53,7 +53,7 @@ public class IpUtils
             ip = request.getRemoteAddr();
         }
 
-        return "0:0:0:0:0:0:0:1".equals(ip) ? "127.0.0.1" : getMultistageReverseProxyIp(ip);
+        return "0:0:0:0:0:0:0:1".equals(ip) ? InetAddress.getLoopbackAddress().getHostAddress() : getMultistageReverseProxyIp(ip);
     }
 
     /**
@@ -65,7 +65,7 @@ public class IpUtils
     public static boolean internalIp(String ip)
     {
         byte[] addr = textToNumericFormatV4(ip);
-        return internalIp(addr) || "127.0.0.1".equals(ip);
+        return internalIp(addr) || InetAddress.getLoopbackAddress().getHostAddress().equals(ip);
     }
 
     /**
@@ -213,7 +213,7 @@ public class IpUtils
         catch (UnknownHostException e)
         {
         }
-        return "127.0.0.1";
+        return InetAddress.getLoopbackAddress().getHostAddress();
     }
 
     /**

@@ -17,7 +17,7 @@ export SUPABASE_DB_URL='jdbc:postgresql://<host>:5432/postgres?sslmode=require'
 export SUPABASE_DB_USER='postgres'
 export SUPABASE_DB_PASSWORD='<db_password>'
 
-export REDIS_HOST='127.0.0.1'
+export REDIS_HOST='redis.internal'
 export REDIS_PORT='6379'
 export REDIS_DATABASE='0'
 export REDIS_PASSWORD=''

@@ -31,7 +31,7 @@ const S3_PUBLIC_BASE_URL = process.env.SUPABASE_STORAGE_PUBLIC_BASE_URL || ''
 
 const SUPABASE_URL = process.env.SUPABASE_URL || ''
 const SUPABASE_SECRET_KEY = process.env.SUPABASE_SECRET_KEY || process.env.SUPABASE_SERVICE_ROLE_KEY || ''
-const REDIS_URL = process.env.REDIS_URL || 'redis://127.0.0.1:6379'
+const REDIS_URL = process.env.REDIS_URL || 'redis://redis.internal:6379'
 const REDIS_ENABLED = String(process.env.REDIS_ENABLED || 'true') !== 'false'
 const REDIS_CLUSTER_CHANNEL = process.env.REDIS_CLUSTER_CHANNEL || 'rco:cluster:events'
 const REDIS_STATUS_CHANNEL = process.env.REDIS_STATUS_CHANNEL || 'rco:status:events'

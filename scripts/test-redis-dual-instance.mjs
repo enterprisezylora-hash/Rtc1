@@ -29,7 +29,7 @@ function parseEnvFile(filePath) {
 }
 
 const fileEnv = parseEnvFile(ENV_FILE)
-const HOST = process.env.TEST_HOST || '127.0.0.1'
+const HOST = process.env.TEST_HOST || 'api.internal'
 const PORT_A = Number(process.env.TEST_PORT_A || 8891)
 const PORT_B = Number(process.env.TEST_PORT_B || 8892)
 const USERNAME = process.env.TEST_USERNAME || process.env.ADMIN_USERNAME || fileEnv.ADMIN_USERNAME || 'admin'

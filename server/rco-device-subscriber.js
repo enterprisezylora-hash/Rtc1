@@ -6,7 +6,7 @@ const SUPABASE_SECRET_KEY = process.env.SUPABASE_SECRET_KEY || process.env.SUPAB
 const DEVICE_EXTERNAL_ID = process.env.RCO_DEVICE_EXTERNAL_ID || 'device-001'
 const DEVICE_DISPLAY_NAME = process.env.RCO_DEVICE_DISPLAY_NAME || `Device ${DEVICE_EXTERNAL_ID}`
 const DEVICE_PLATFORM = process.env.RCO_DEVICE_PLATFORM || 'android'
-const REDIS_URL = process.env.REDIS_URL || 'redis://127.0.0.1:6379'
+const REDIS_URL = process.env.REDIS_URL || 'redis://redis.internal:6379'
 const REDIS_ENABLED = String(process.env.REDIS_ENABLED || 'true') !== 'false'
 const REDIS_STATUS_CHANNEL = process.env.REDIS_STATUS_CHANNEL || 'rco:status:events'
 const INSTANCE_ID = process.env.INSTANCE_ID || `subscriber-${DEVICE_EXTERNAL_ID}`

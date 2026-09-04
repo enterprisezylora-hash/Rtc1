@@ -50,7 +50,7 @@ $(document).ready(function(){
 	jQuery.validator.addMethod("isIp",function(value,element) {
 		var ip = /^(?:(?:2[0-4][0-9]\.)|(?:25[0-5]\.)|(?:1[0-9][0-9]\.)|(?:[1-9][0-9]\.)|(?:[0-9]\.)){3}(?:(?:2[0-4][0-9])|(?:25[0-5])|(?:1[0-9][0-9])|(?:[1-9][0-9])|(?:[0-9]))$/;
 		return this.optional(element) || (ip).test(value);
-	},"IP地址格式示例127.0.0.1");
+	},"IP地址格式示例192.168.1.10");
 	jQuery.validator.addMethod("notEqual", function(value, element, param) {
         return value != param;
     }, $.validator.format("输入值不允许为{0}"));
