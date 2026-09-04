@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 import { spawn } from 'node:child_process'
 import fs from 'node:fs'
+import net from 'node:net'
 import process from 'node:process'
 import { setTimeout as delay } from 'node:timers/promises'
 import { randomUUID } from 'node:crypto'
@@ -40,6 +41,53 @@ const START_MAX_RETRY = Number(process.env.TEST_START_MAX_RETRY || 4)
 
 const INSTANCE_A = `instance-A-${randomUUID().slice(0, 8)}`
 const INSTANCE_B = `instance-B-${randomUUID().slice(0, 8)}`
+
+function failFast(message) {
+  console.error(`FAIL: ${message}`)
+  process.exit(1)
+}
+
+function checkTcpReachable(host, port, timeoutMs = 3000) {
+  return new Promise((resolve) => {
+    const socket = net.createConnection({ host, port })
+    const done = (ok) => {
+      socket.destroy()
+      resolve(ok)
+    }
+    socket.setTimeout(timeoutMs)
+    socket.once('connect', () => done(true))
+    socket.once('timeout', () => done(false))
+    socket.once('error', () => done(false))
+  })
+}
+
+async function preflight() {
+  if (!fs.existsSync(ENV_FILE)) {
+    failFast(`${ENV_FILE} not found — copy it first: cp .env.server.example .env.server (or run scripts/setup-supabase-local.sh)`)
+  }
+
+  const redisUrl = fileEnv.REDIS_URL || process.env.REDIS_URL || 'redis://redis.internal:6379'
+  const redisMatch = redisUrl.match(/^redis:\/\/([^:/]+):(\d+)/)
+  if (redisMatch && !(await checkTcpReachable(redisMatch[1], Number(redisMatch[2])))) {
+    failFast(`Redis not reachable at ${redisUrl} — start redis-server or fix REDIS_URL in .env.server`)
+  }
+
+  const supabaseUrl = fileEnv.SUPABASE_URL || process.env.SUPABASE_URL || ''
+  if (supabaseUrl) {
+    try {
+      const response = await fetch(`${supabaseUrl}/auth/v1/health`, { signal: AbortSignal.timeout(5000) })
+      if (!response.ok) {
+        failFast(`Supabase unhealthy at ${supabaseUrl} (HTTP ${response.status}) — run scripts/setup-supabase-local.sh`)
+      }
+    } catch (error) {
+      failFast(`Supabase not reachable at ${supabaseUrl}: ${error.message} — run scripts/setup-supabase-local.sh`)
+    }
+  }
+
+  if (fileEnv.ADMIN_PASSWORD && fileEnv.ADMIN_PASSWORD.includes('change-this')) {
+    failFast('.env.server still contains placeholder ADMIN_PASSWORD — set a real password for the seeded admin user')
+  }
+}
 
 const servers = []
 
@@ -277,6 +325,8 @@ process.on('SIGTERM', () => {
 })
 
 async function main() {
+  await preflight()
+
   const baseA = `http://${HOST}:${PORT_A}`
   const baseB = `http://${HOST}:${PORT_B}`
   const wsB = `ws://${HOST}:${PORT_B}`

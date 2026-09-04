@@ -1,0 +1,46 @@
+name: release-gate
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+          cache: maven
+
+      - name: Build backend ruoyi-vue-supabase (bundles Vue UI)
+        run: mvn -B -ntp package -DskipTests
+        working-directory: backends/ruoyi-vue-supabase
+
+      - name: Smoke check — Vue UI must be bundled in jar
+        run: unzip -l backends/ruoyi-vue-supabase/ruoyi-admin/target/ruoyi-admin.jar | grep -q 'rco-ui/index.html'
+
+      - name: Build backend ruoyi-classic-supabase
+        run: mvn -B -ntp package -DskipTests
+        working-directory: backends/ruoyi-classic-supabase
+
+      - name: Smoke check — static assets bundled in jar (classic)
+        run: unzip -l backends/ruoyi-classic-supabase/ruoyi-admin/target/ruoyi-admin.jar | grep -q 'static/'
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: backend-jars
+          path: |
+            backends/ruoyi-vue-supabase/ruoyi-admin/target/ruoyi-admin.jar
+            backends/ruoyi-classic-supabase/ruoyi-admin/target/ruoyi-admin.jar
