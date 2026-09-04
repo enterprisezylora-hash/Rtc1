@@ -2,20 +2,20 @@
 spring:
     datasource:
         type: com.alibaba.druid.pool.DruidDataSource
-        driverClassName: com.mysql.cj.jdbc.Driver
+        driverClassName: org.postgresql.Driver
         druid:
             # 主库数据源
             master:
-                url: jdbc:mysql://localhost:3306/ry-vue?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8
-                username: root
-                password: password
+                url: ${SUPABASE_DB_URL:jdbc:postgresql://127.0.0.1:5432/postgres?sslmode=require}
+                username: ${SUPABASE_DB_USER:postgres}
+                password: ${SUPABASE_DB_PASSWORD:postgres}
             # 从库数据源
             slave:
                 # 从数据源开关/默认关闭
                 enabled: false
-                url: 
-                username: 
-                password: 
+                url: ${SUPABASE_DB_SLAVE_URL:}
+                username: ${SUPABASE_DB_SLAVE_USER:}
+                password: ${SUPABASE_DB_SLAVE_PASSWORD:}
             # 初始连接数
             initialSize: 5
             # 最小连接池数量
@@ -35,7 +35,7 @@ spring:
             # 配置一个连接在池中最大生存的时间，单位是毫秒
             maxEvictableIdleTimeMillis: 900000
             # 配置检测连接是否有效
-            validationQuery: SELECT 1 FROM DUAL
+            validationQuery: SELECT 1
             testWhileIdle: true
             testOnBorrow: false
             testOnReturn: false
