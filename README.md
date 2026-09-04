@@ -51,22 +51,34 @@ Backend sudah mengikuti permission model ala RuoYi:
 
 Redis dipakai untuk mode multi-instance backend:
 
-- mirror queue command ke `rco:commands:stream` dan `rco:commands:list`
-- cache `snapshot` panel + `health` endpoint
-- pub/sub status command `queued/sent/acked/failed` lintas instance
 
 Environment Redis:
 
-- `REDIS_ENABLED`
-- `REDIS_URL`
-- `REDIS_CLUSTER_CHANNEL`
-- `REDIS_STATUS_CHANNEL`
-- `REDIS_COMMAND_STREAM`
-- `REDIS_COMMAND_LIST`
-- `REDIS_SNAPSHOT_CACHE_KEY`
-- `REDIS_HEALTH_CACHE_KEY`
-- `REDIS_CACHE_TTL_SECONDS`
-- `INSTANCE_ID`
+
+## Dual-instance Redis verification
+
+Jalankan test otomatis untuk verifikasi pub/sub lintas instance backend:
+
+```bash
+npm run test:redis:dual
+```
+
+Yang diverifikasi test:
+
+- start 2 instance backend dengan `INSTANCE_ID` berbeda
+- login ke instance A
+- register dummy client di instance A
+- kirim command `POST /system/rco/task` dari instance A
+- pastikan instance B menerima event websocket `rco-status` dari Redis channel (dengan `instanceId` milik instance A)
+- cek `GET /api/redis/queue-stats` di kedua instance dalam mode `ready=true`
+
+Override opsional:
+
+- `TEST_PORT_A` (default `8891`)
+- `TEST_PORT_B` (default `8892`)
+- `TEST_USERNAME` / `TEST_PASSWORD` (default mengikuti admin env atau `admin/admin123`)
+- `TEST_EVENT_TIMEOUT_MS` (default `15000`)
+- `TEST_START_MAX_RETRY` (default `4`, retry startup saat init Supabase transient error)
 
 ## Playback Scheduler
 

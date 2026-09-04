@@ -11,7 +11,8 @@
     "build": "vite build",
     "preview": "vite preview",
     "start": "node --env-file=.env.server server/index.js",
-    "rco:subscriber": "node --env-file=.env.server server/rco-device-subscriber.js"
+    "rco:subscriber": "node --env-file=.env.server server/rco-device-subscriber.js",
+    "test:redis:dual": "node scripts/test-redis-dual-instance.mjs"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.1126.0",
