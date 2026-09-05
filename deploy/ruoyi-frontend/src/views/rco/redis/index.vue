@@ -35,8 +35,8 @@
               <el-tag :type="stats.ready ? 'success' : 'danger'" size="mini">{{ stats.ready }}</el-tag>
             </el-descriptions-item>
             <el-descriptions-item label="Mode">{{ stats.mode || '-' }}</el-descriptions-item>
-            <el-descriptions-item label="Stream ({{ stats.stats?.streamKey }})">{{ stats.stats?.streamLength ?? '-' }}</el-descriptions-item>
-            <el-descriptions-item label="List ({{ stats.stats?.listKey }})">{{ stats.stats?.listLength ?? '-' }}</el-descriptions-item>
+            <el-descriptions-item :label="`Stream (${stats.stats?.streamKey || '-'})`">{{ stats.stats?.streamLength ?? '-' }}</el-descriptions-item>
+            <el-descriptions-item :label="`List (${stats.stats?.listKey || '-'})`">{{ stats.stats?.listLength ?? '-' }}</el-descriptions-item>
             <el-descriptions-item label="Snapshot Cache">
               <el-tag :type="stats.stats?.snapshotCacheExists ? 'success' : 'info'" size="mini">{{ !!stats.stats?.snapshotCacheExists }}</el-tag>
             </el-descriptions-item>
